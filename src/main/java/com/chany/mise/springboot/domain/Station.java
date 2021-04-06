@@ -1,5 +1,10 @@
 package com.chany.mise.springboot.domain;
 
-public class Station {
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@Getter
+@RequiredArgsConstructor
+public class Station {
+    private final String stationName;//측정소명
 }

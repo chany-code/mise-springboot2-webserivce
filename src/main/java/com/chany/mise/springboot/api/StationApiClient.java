@@ -1,5 +1,6 @@
 package com.chany.mise.springboot.api;
 
+import com.chany.mise.springboot.domain.Station;
 import com.chany.mise.springboot.domain.TmXY;
 import lombok.NoArgsConstructor;
 import org.json.simple.JSONArray;
@@ -15,20 +16,20 @@ import java.net.URL;
 
 @NoArgsConstructor
 @Service
-public class TmXYApiClient {
+public class StationApiClient {
 
-    public TmXY findXYByDong(String dong){
+    public Station getStationByXY(TmXY tmXY){
+        String tmx = tmXY.getTmx();
+        String tmy = tmXY.getTmy();
         //StringBuffer result = new StringBuffer();
         String result = "";
-        String tmx = "";
-        String tmy = "";
+        String stationName="";
         try {
-            StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B552584/MsrstnInfoInqireSvc/getTMStdrCrdnt"); //*URL
-            urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8") + "=Mkm%2FJ0IVq25CKomnlLXR7Q%2Bp8rokqqZWe0HjNbDcMcM2U7Heo%2B9iReiJssVBsGRdzSDNkUV%2FBcPNfZ7aJIKiCw%3D%3D"); ///*Service Key
+            StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B552584/MsrstnInfoInqireSvc/getNearbyMsrstnList");
+            urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8") + "=Mkm%2FJ0IVq25CKomnlLXR7Q%2Bp8rokqqZWe0HjNbDcMcM2U7Heo%2B9iReiJssVBsGRdzSDNkUV%2FBcPNfZ7aJIKiCw%3D%3D");
             urlBuilder.append("&" + URLEncoder.encode("returnType", "UTF-8") + "=" + URLEncoder.encode("json", "UTF-8"));
-            urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8"));//중복된 동이름에 대한 filtering은 불가
-            urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8"));
-            urlBuilder.append("&" + URLEncoder.encode("umdName", "UTF-8") + "=" + URLEncoder.encode(dong, "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("tmX", "UTF-8") + "=" + URLEncoder.encode(tmx, "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("tmY", "UTF-8") + "=" + URLEncoder.encode(tmy, "UTF-8"));
             URL url = new URL(urlBuilder.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
@@ -44,11 +45,8 @@ public class TmXYApiClient {
             String line;
             while ((line = rd.readLine()) != null) {
                 //result.append(line+"\n");
-                result=result.concat(line);
+                result = result.concat(line);
             }
-            rd.close();
-            conn.disconnect();
-
             //JSON Parser 만들어 문자열 데이터 객체화하기
             JSONParser parser = new JSONParser();
             JSONObject obj = (JSONObject)parser.parse(result);
@@ -58,13 +56,14 @@ public class TmXYApiClient {
 
             JSONObject value = (JSONObject) array.get(0);
 
-            tmx = value.get("tmX").toString();
-            tmy = value.get("tmY").toString();
+            stationName=value.get("stationName").toString();
 
+            rd.close();
+            conn.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("tmX좌표 : "+tmx+"\ttmY좌표 : "+tmy);//console에 찍어놓기
-        return new TmXY(tmx,tmy);
+        System.out.println("측정소명 : "+stationName);
+        return new Station(stationName);
     }
 }

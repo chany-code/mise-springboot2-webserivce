@@ -1,5 +1,7 @@
 package com.chany.mise.springboot.api;
 
+import com.chany.mise.springboot.domain.Station;
+import com.chany.mise.springboot.web.dto.GradeResponseDto;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
@@ -29,7 +31,7 @@ public class GradeApiClient {
     }
     */
 
-    public String requestGrade(String station) {
+    public GradeResponseDto requestGrade(Station station) {
         //StringBuffer result = new StringBuffer();
         String result = "";
         String pm10 = "";
@@ -40,7 +42,7 @@ public class GradeApiClient {
             urlBuilder.append("&" + URLEncoder.encode("returnType", "UTF-8") + "=" + URLEncoder.encode("json", "UTF-8")); //리턴 타입(xml, json)
             urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); //한 페이지 결과 수: 하나의 결과, 즉 제일 최근의 결과만 출력함
             urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); //페이지 번호
-            urlBuilder.append("&" + URLEncoder.encode("stationName", "UTF-8") + "=" + URLEncoder.encode(station, "UTF-8")); //측정소 이름
+            urlBuilder.append("&" + URLEncoder.encode("stationName", "UTF-8") + "=" + URLEncoder.encode(station.getStationName(), "UTF-8")); //측정소 이름
             urlBuilder.append("&" + URLEncoder.encode("dataTerm", "UTF-8") + "=" + URLEncoder.encode("DAILY", "UTF-8")); //요청 데이터기간 (하루 : DAILY, 한달 : MONTH, 3달 : 3MONTH)
             urlBuilder.append("&" + URLEncoder.encode("ver", "UTF-8") + "=" + URLEncoder.encode("1.0", "UTF-8")); //버전별 상세 결과 참고문서 참조
             URL url = new URL(urlBuilder.toString());
@@ -62,6 +64,7 @@ public class GradeApiClient {
             }
 
             //JSON Parser 만들어 문자열 데이터 객체화하기
+            //없는 "측정소"를 입력했을 때 에러를 내뱉어야 함
             JSONParser parser = new JSONParser();
             JSONObject obj = (JSONObject)parser.parse(result);
             JSONObject obj2 = (JSONObject)obj.get("response");
@@ -100,8 +103,8 @@ public class GradeApiClient {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return "미세먼지 : "+ pm10 + "\n초미세먼지 : "+ pm25;
+        System.out.println("미세(pm10) : "+pm10 +"\t초미세(pm2.5) : "+pm25);
+        return new GradeResponseDto(pm10,pm25);
     }
 
 
