@@ -1,17 +1,10 @@
 package com.chany.mise.springboot.api;
 
-import com.chany.mise.springboot.web.dto.GradeResponseDto;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -21,7 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-@RequiredArgsConstructor
+@NoArgsConstructor
 @Service
 public class GradeApiClient {
     /* 시행착오
@@ -35,8 +28,6 @@ public class GradeApiClient {
         return restTemplate.exchange(url_getGrade, HttpMethod.GET,entity,GradeResponseDto.class,station).getBody();
     }
     */
-    //@Autowired
-    //private RestTemplate restTemplate;
 
     public String requestGrade(String station) {
         //StringBuffer result = new StringBuffer();
@@ -118,5 +109,6 @@ public class GradeApiClient {
     public String requestTmXY(String dong){
         return "";
     }
+
 
 }
