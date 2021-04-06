@@ -5,6 +5,7 @@ import com.chany.mise.springboot.domain.Station;
 import com.chany.mise.springboot.domain.TmXY;
 import com.chany.mise.springboot.web.dto.GradeResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONObject;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Service;
 
@@ -26,12 +27,14 @@ public class GradeService {
     }
 
     //동 이름 -> tmXY 좌표 -> 측정소 -> Grade
-    public String getGradeByDong(String dong){
+    public JSONObject getGradeByDong(String dong){
         TmXY tmXY = tmXYService.findXYByDong(dong);
         Station station = stationService.findStationByXY(tmXY);
         GradeResponseDto gradeResponseDto = getGradeByStation(station);
 
-        return gradeResponseDto.toString();
+        //String str =gradeResponseDto.toString();
+
+        return gradeResponseDto.toJSON();
     }
 
 }

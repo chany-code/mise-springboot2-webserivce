@@ -1,10 +1,12 @@
 package com.chany.mise.springboot.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jdk.nashorn.internal.parser.JSONParser;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONObject;
 
 @Getter
 @RequiredArgsConstructor
@@ -22,8 +24,14 @@ public class GradeResponseDto {
         this.pm25Grade=pm25Grade;
     }
 
-    @Override
-    public String toString(){
+
+    public JSONObject toJSON(){
+        JSONObject jobj = new JSONObject();
+        jobj.put("미세먼지",pm10Grade);
+        jobj.put("초미세먼지", pm25Grade);
+        JSONParser parser = new JSONParser();
+        JSONObject result = (JSONObject) parser.parse(jobj.toJSONString());
+
         return "미세먼지 : "+pm10Grade+"\n초미세먼지 : "+pm25Grade;
     }
 

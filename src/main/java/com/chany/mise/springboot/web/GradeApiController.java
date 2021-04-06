@@ -3,6 +3,7 @@ package com.chany.mise.springboot.web;
 import com.chany.mise.springboot.service.GradeService;
 import com.chany.mise.springboot.service.TmXYService;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +17,7 @@ public class GradeApiController{
     private final TmXYService tmXYService;
 
     @GetMapping("/api/miseGrade/{dong}")
-    public String getGradeByDong(@PathVariable String dong) {
+    public JSONObject getGradeByDong(@PathVariable String dong) {
 
         return gradeService.getGradeByDong(dong);
     }
