@@ -1,7 +1,7 @@
 package com.chany.mise.springboot.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jdk.nashorn.internal.parser.JSONParser;
+import org.json.simple.parser.JSONParser;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,13 +26,18 @@ public class GradeResponseDto {
 
 
     public JSONObject toJSON(){
-        JSONObject jobj = new JSONObject();
-        jobj.put("미세먼지",pm10Grade);
-        jobj.put("초미세먼지", pm25Grade);
-        JSONParser parser = new JSONParser();
-        JSONObject result = (JSONObject) parser.parse(jobj.toJSONString());
+        JSONObject result = new JSONObject();
+        try {
+            JSONObject jobj = new JSONObject();
+            jobj.put("미세먼지",pm10Grade);
+            jobj.put("초미세먼지", pm25Grade);
+            JSONParser parser = new JSONParser();
+            result = (JSONObject) parser.parse(jobj.toJSONString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
-        return "미세먼지 : "+pm10Grade+"\n초미세먼지 : "+pm25Grade;
+        return result;
     }
 
 
